@@ -12,7 +12,7 @@ const connection = mysql.createConnection({
 const initialize = function () {
   connection.connect((err) => {
     if (err) throw err;
-    displayProducts();
+    question();
   });
 }
 
@@ -20,55 +20,144 @@ const endConnection = function () {
   connection.end();
 }
 
-const displayProducts = function () {
-  const query = connection.query(`SELECT item_id, product_name, price FROM products`,
-    function (err, res) {
-
-      if (err) throw err;
-
-      console.log(`Our line of products...`)
-      console.table(res);
-
-      const products = res.map(element => {
-        return `(${element.item_id})      ${element.product_name}`;
-      });
-
-      productList.choices = products;
-
-      question();
-
-    });
-}
-
 const question = function () {
 
   inquirer.prompt([
 
-    productList,
-    quantity
+    menuList
 
   ]).then(answers => {
-    const startIndex = answers.productId.indexOf('(') + 1;
-    const endIndex = answers.productId.indexOf(')', startIndex);
-    const productId = answers.productId.substring(startIndex, endIndex);
-    const quantity = answers.quantity;
-    checkout(productId, quantity);
+
+    console.log(answers);
+
+    routeTasks(answers.option);
   });
 }
 
-const productList = {
-  message: "Select product for purchase \n\n (productId) productName ",
+const menuList = {
+  message: "Select an Option",
   type: "list",
-  name: "productId"
+  name: "option",
+  choices: [
+    "View Products for Sale",
+    "View Low Inventory",
+    "Add To Inventory",
+    "Add New Product"
+  ]
 }
 
-const quantity = {
-  message: "quantity",
-  type: "input",
-  name: "quantity"
+
+const addProduct = [
+  {
+    message: "item_id",
+    type: "input",
+    name: "item_id",
+    validate: input => {
+      return /^[0-9]*$/.test(input.trim());
+    }
+  },
+  {
+    message: "product_name",
+    type: "input",
+    name: "product_name"
+  },
+  {
+    message: "department_name",
+    type: "input",
+    name: "department_name"
+  },
+  {
+    message: "price",
+    type: "input",
+    name: "price",
+    validate: input => {
+      return /^[0-9]*$/.test(input.trim());
+    }
+  },
+  {
+    message: "stock_quantity",
+    type: "input",
+    name: "stock_quantity",
+    validate: input => {
+      return /^[0-9]*$/.test(input.trim());
+    }
+  }
+]
+  
+
+
+const routeTasks = function (option) {
+
+  switch (option) {
+
+    case "View Products for Sale":
+      return viewProductsForSale();
+
+    case "View Low Inventory":
+      return viewLowInventory();
+
+    case "Add To Inventory":
+      return addToInventory();
+
+    case "Add New Product":
+      return addNewProductPrompt();
+
+    default:
+      break;
+  }
+
 }
 
+const viewProductsForSale = function () {
+  console.log("In viewProductsForSale");
+  const query = connection.query(`SELECT * FROM products`,
+    function (err, res) {
 
+      if (err) throw err;
+
+      console.log(`Products For Sale...`);
+      console.table(res);
+
+      endConnection();
+    });
+
+}
+
+const viewLowInventory = function () {
+  console.log("In viewLowInventory");
+  const query = connection.query(`SELECT * FROM products WHERE stock_quantity < 5`,
+    function (err, res) {
+
+      if (err) throw err;
+
+      if (res.length > 0) {
+        console.log(`Low Inventory Items...`);
+        console.table(res);
+      } else {
+        console.log("All Items are surplus");
+      }
+
+      endConnection();
+    });
+}
+
+const addToInventory = function () {
+
+}
+
+const addNewProduct = function(answers) {
+  connection.query(`INSERT INTO products (item_id, product_name, department_name, price, stock_quantity) VALUES ?`)
+}
+
+const addNewProductPrompt = function () {
+  console.log("In Add New Product");
+  inquirer.prompt(
+    addProduct
+  ).then(answers => {
+    console.log(answers);
+    addNewProduct(answers);
+  });
+}
 
 
 initialize();

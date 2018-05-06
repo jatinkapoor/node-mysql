@@ -34,6 +34,7 @@ const displayProducts = function () {
       });
 
       productList.choices = products;
+
       question();
 
     });
@@ -64,41 +65,10 @@ const productList = {
 const quantity = {
   message: "quantity",
   type: "input",
-  name: "quantity",
-  validate: (input) => {
-    if (input > 0) {
-      return true;
-    } else {
-      return "Enter Valid quantity";
-    }
-  }
+  name: "quantity"
 }
 
-const checkout = function (productId, quantity) {
-  connection.query(`SELECT stock_quantity, price FROM products WHERE item_id = "${productId}"`,
-    function (err, res) {
 
-      if (err) throw err;
 
-      if (res[0].stock_quantity >= quantity) {
-        updateQuantity(productId, res[0].stock_quantity, quantity, res[0].price);
-      } else {
-        console.log("Insufficient quantity!");
-        endConnection();
-      }
-    });
-}
-
-const updateQuantity = function (productId, stock_quantity, quantity, price) {
-  connection.query(`UPDATE products SET stock_quantity = ${stock_quantity} WHERE item_id = "${productId}"`,
-    function (err, res) {
-
-      if (err) throw err;
-
-      console.log("Order Placed !!");
-      console.log("Total Cost of Purchase " + quantity * price);
-      endConnection();
-    });
-}
 
 initialize();

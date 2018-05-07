@@ -21,7 +21,7 @@ const endConnection = function () {
 }
 
 const displayProducts = function () {
-  const query = connection.query(`SELECT item_id, product_name, price FROM products`,
+  const query = connection.query(`SELECT item_id, product_name FROM products`,
     function (err, res) {
 
       if (err) throw err;

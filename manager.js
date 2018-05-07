@@ -110,7 +110,6 @@ const routeTasks = function (option) {
 
 const viewProductsForSale = function () {
 
-  console.log("In viewProductsForSale");
   const query = connection.query(`SELECT * FROM products`,
     function (err, res) {
 
@@ -125,7 +124,7 @@ const viewProductsForSale = function () {
 }
 
 const viewLowInventory = function () {
-  console.log("In viewLowInventory");
+  
   const query = connection.query(`SELECT * FROM products WHERE stock_quantity < 5`,
     function (err, res) {
 
@@ -143,6 +142,7 @@ const viewLowInventory = function () {
 }
 
 const viewItemsForInventory = function () {
+
   const query = connection.query(`SELECT item_id, product_name FROM products`,
     function (err, res) {
 
@@ -216,7 +216,7 @@ const updateInventory = function (productId, quantity) {
 }
 
 const addNewProductPrompt = function () {
-  console.log("In Add New Product");
+
   inquirer.prompt(
     addProduct
   ).then(answers => {

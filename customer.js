@@ -21,7 +21,7 @@ const endConnection = function () {
 }
 
 const displayProducts = function () {
-  const query = connection.query(`SELECT item_id, product_name FROM products`,
+  const query = connection.query(`SELECT item_id, product_name, price FROM products`,
     function (err, res) {
 
       if (err) throw err;
@@ -96,7 +96,7 @@ const updateQuantity = function (productId, stock_quantity, quantity, price) {
       if (err) throw err;
 
       console.log("Order Placed !!");
-      console.log("Total Cost of Purchase " + quantity * price);
+      console.log("Total Cost of Purchase " + "$" + quantity * price);
       endConnection();
     });
 }

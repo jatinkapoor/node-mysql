@@ -47,7 +47,8 @@ const menuList = {
 }
 
 
-const addProduct = [{
+const addProduct = [
+  {
     message: "item_id",
     type: "input",
     name: "item_id",

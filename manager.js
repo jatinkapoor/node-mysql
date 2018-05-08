@@ -27,9 +27,7 @@ const question = function () {
     menuList
 
   ]).then(answers => {
-
-    console.log(answers);
-
+    
     routeTasks(answers.option);
   });
 }
@@ -49,14 +47,6 @@ const menuList = {
 
 const addProduct = [
   {
-    message: "item_id",
-    type: "input",
-    name: "item_id",
-    validate: input => {
-      return /^[0-9]*$/.test(input.trim());
-    }
-  },
-  {
     message: "product_name",
     type: "input",
     name: "product_name"
@@ -71,7 +61,7 @@ const addProduct = [
     type: "input",
     name: "price",
     validate: input => {
-      return /^[0-9]*$/.test(input.trim());
+      return /^[1-9][\.\d]*(,\d+)?$/.test(input.trim());
     }
   },
   {
@@ -178,8 +168,10 @@ const quantityQuestion = {
 
 const inventoryQuestion = function () {
   inquirer.prompt([
+
     productList,
     quantityQuestion
+
   ]).then(answers => {
     const startIndex = answers.productId.indexOf('(') + 1;
     const endIndex = answers.productId.indexOf(')', startIndex);
@@ -218,7 +210,9 @@ const updateInventory = function (productId, quantity) {
 const addNewProductPrompt = function () {
 
   inquirer.prompt(
+
     addProduct
+
   ).then(answers => {
     addNewProduct(answers);
   });
@@ -226,10 +220,9 @@ const addNewProductPrompt = function () {
 
 const addNewProduct = function (answers) {
   connection.query(`INSERT INTO products SET ?`, {
-    item_id: parseInt(answers.item_id),
     product_name: answers.product_name,
     department_name: answers.department_name,
-    price: parseInt(answers.price),
+    price: parseFloat(answers.price),
     stock_quantity: parseInt(answers.stock_quantity)
   }, function (err) {
     if (err) throw err;

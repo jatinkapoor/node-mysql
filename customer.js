@@ -90,13 +90,14 @@ const checkout = function (productId, quantity) {
 }
 
 const updateQuantity = function (productId, stock_quantity, quantity, price) {
-  connection.query(`UPDATE products SET stock_quantity = ${stock_quantity} WHERE item_id = "${productId}"`,
+  connection.query(`UPDATE products SET stock_quantity = ${stock_quantity} WHERE item_id = ${productId}`,
     function (err, res) {
 
       if (err) throw err;
 
+      const purchaseCost = quantity * price;
       console.log("Order Placed !!");
-      console.log("Total Cost of Purchase " + "$" + quantity * price);
+      console.log("Total Cost of Purchase " + "$" + purchaseCost);
       endConnection();
     });
 }

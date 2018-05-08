@@ -5,7 +5,7 @@ const cTable = require('console.table');
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'hello123',
+  password: '',
   database: 'bamazon'
 });
 
@@ -27,7 +27,7 @@ const question = function () {
     menuList
 
   ]).then(answers => {
-    
+
     routeTasks(answers.option);
   });
 }
